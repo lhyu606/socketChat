@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        * { margin: 0;padding: 0;box-sizing: border-box;}
+
+        body {font: 13px Helvetica, Arial;width: 600px;margin: 0 auto;}
+
+        form {background: #000;padding: 3px;position: fixed;bottom: 0;width: 600px;}
+
+        form input {border: 0;padding: 10px;width: 89%;margin-right: .5%;}
+
+        form button {width: 9%;background: rgb(130, 224, 255);border: none;padding: 10px;}
+
+        #messages {list-style-type: none;margin: 0;padding: 0;}
+
+        #messages li {padding: 5px 10px;}
+        #messages li .content{background: #cccccc;line-height: 24px;display: inline-block;padding: 6px 10px;border-radius: 10px;font-size: 16px;}
+        #messages li.self .content{float: right;}
+        #messages li .user {font-size: 14px;line-height: 18px;color: #999999;}
+        #messages li.self .user {text-align: right;}
+        
+        #messages {margin-bottom: 40px;}
+        .welcome{height: 40px;background: skyblue;color: white;font-size: 20px;line-height: 40px;text-align: center;}
+        .usernum{height: 18px;line-height: 18px;text-align: right;margin-right: 15px;;}
+        .new-user-box{text-align: center;}
+        .new-user{display: inline-block;padding: 2px 5px;background: #cccccc;font-size: 14px;}
+        .clear{clear: both;}
+    </style>
+</head>
+
+<body>
+    <div class="welcome">
+        亲爱的 <span class="username">{{ username }}</span>，<span id="saygood"></span>好 ^_^
+    </div>
+    <div class="usernum">
+        当前用户数：<span id="usernum">1</span>
+    </div>
+    <ul id="messages">
+        
+    </ul>
+    <div>
+        <form action="">
+            <input id="m" autocomplete="off" />
+            <button>Send</button>
+        </form>
+    </div>
+    
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        $(function () {
+            welcome();
+            var username = $(".username").html();
+            var socket = io();
+            $('form').submit(function () {
+                socket.emit('chat message', {
+                    user: username,
+                    content: $('#m').val()
+                });
+                $('#m').val('');
+                return false;
+            });
+            socket.on('chat message', function (msg) {
+                var html = '';
+                if (msg.user == username){
+                    html = `<li class="item self">
+                        <div class="user">${ msg.user }</div>
+                        <div class="content">${ msg.content }</div>
+                        <div class="clear"></div>
+                    </li>`;
+                } else {
+                    html = `<li class="item">
+                        <div class="user">${ msg.user}</div>
+                        <div class="content">${ msg.content}</div>
+                        <div class="clear"></div>
+                    </li>`;
+                }
+                
+                $('#messages').append($(html));
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+            // 有新用户登录
+            socket.on('user login', function (msg) {
+                $("#usernum").html(msg.usernum);
+                var html = `<li>
+                    <div class="new-user-box">
+                        <div class="new-user">欢迎 ${msg.username} 加入聊天 ^_^</div>
+                    </div>
+                </li>`;
+                $('#messages').append($(html));
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+            // 用户退出
+            window.onbeforeunload = function (e) {
+                e = e || window.event;
+                socket.emit('logout', {
+                    user: username
+                });
+            }
+            socket.on('user logout', function (msg) {
+                $("#usernum").html(msg.usernum);
+                var html = `<li>
+                    <div class="new-user-box">
+                        <div class="new-user"> ${msg.username} 退出聊天 ^_^</div>
+                    </div>
+                </li>`;
+                $('#messages').append($(html));
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+        });
+        // 问好
+        function welcome() {
+            var date = new Date();
+            var hour = date.getHours();
+            var saygood = '';
+            if (hour >= 18) {
+                saygood = '晚上';
+            } else if (hour >= 12) {
+                saygood = '下午';
+            } else {
+                saygood = '早上'
+            }
+            document.getElementById('saygood').innerText = saygood;
+        }
+    </script>
+</body>
+
+</html>

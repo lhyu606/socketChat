@@ -1,0 +1,25 @@
+{
+  "name": "socket-chat",
+  "version": "1.0.0",
+  "description": "make a socket-chat demo",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "lhyu606",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "socket.io": "^1.7.3",
+    "swig": "^1.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lhyu606/socketChat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lhyu606/socketChat/issues"
+  },
+  "homepage": "https://github.com/lhyu606/socketChat#readme"
+}

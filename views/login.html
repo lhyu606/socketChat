@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>socket chat login</title>
+    <style>
+    .contain{width: 500px;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -100%);border: 1px solid #ededed;padding: 10px;text-align: center;}
+    .title{margin: 15px;}
+    .form-line{margin: 15px 0 5px;line-height: 35px;}
+    input{border: 1px solid #000000;padding: 6px;}
+    .err{margin: 0  0 0 190px;height: 18px;text-align: left;font-size: 12px;color: darkorange;}
+    </style>
+</head>
+<body>
+<div class="contain">
+    <h2 class="title">小小聊天室</h2>
+    <div >
+        <form action="/" method="POST">
+            <div class="form-line">昵称：  <input type="text" name="username" autofocus="autofocus"></div> 
+            <p class="err">{{ msg }}</p>
+            <div class="form-line"><input type="submit" value="登录"></div> 
+        </form>
+    </div>
+</div>    
+</body>
+</html>
