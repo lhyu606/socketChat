@@ -7,22 +7,19 @@
         * { margin: 0;padding: 0;box-sizing: border-box;}
 
         body {font: 13px Helvetica, Arial;width: 600px;margin: 0 auto;}
-
         form {background: #000;padding: 3px;position: fixed;bottom: 0;width: 600px;}
-
         form input {border: 0;padding: 10px;width: 89%;margin-right: .5%;}
-
         form button {width: 9%;background: rgb(130, 224, 255);border: none;padding: 10px;}
 
         #messages {list-style-type: none;margin: 0;padding: 0;}
-
         #messages li {padding: 5px 10px;}
         #messages li .content{background: #cccccc;line-height: 24px;display: inline-block;padding: 6px 10px;border-radius: 10px;font-size: 16px;}
         #messages li.self .content{float: right;}
         #messages li .user {font-size: 14px;line-height: 18px;color: #999999;}
         #messages li.self .user {text-align: right;}
-        
-        #messages {margin-bottom: 40px;}
+        #messages {margin-bottom: 40px;margin-top: 60px;}
+
+        .head{position: fixed;top: 0px;left: 50%;transform: translate(-50%, 0);width: 600px;background: #ffffff;}
         .welcome{height: 40px;background: skyblue;color: white;font-size: 20px;line-height: 40px;text-align: center;}
         .usernum{height: 18px;line-height: 18px;text-align: right;margin-right: 15px;;}
         .new-user-box{text-align: center;}
@@ -32,12 +29,15 @@
 </head>
 
 <body>
-    <div class="welcome">
-        亲爱的 <span class="username">{{ username }}</span>，<span id="saygood"></span>好 ^_^
+    <div class="head">
+        <div class="welcome">
+            亲爱的 <span class="username">{{ username }}</span>，<span id="saygood"></span>好 ^_^
+        </div>
+        <div class="usernum">
+            当前用户数：<span id="usernum">1</span>
+        </div>
     </div>
-    <div class="usernum">
-        当前用户数：<span id="usernum">1</span>
-    </div>
+    
     <ul id="messages">
         
     </ul>
