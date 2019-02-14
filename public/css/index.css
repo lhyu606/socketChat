@@ -1,0 +1,37 @@
+* { margin: 0;padding: 0;box-sizing: border-box;vertical-align: middle;}
+
+body {font: 13px Helvetica, Arial;width: 600px;margin: 0 auto;}
+form {background: #000;padding: 3px;position: fixed;bottom: 0;width: 600px;}
+form input {border: 0;padding: 10px;width: 89%;margin-right: .5%;}
+form button {width: 9%;background: rgb(130, 224, 255);border: none;padding: 10px;}
+
+#messages {list-style-type: none;margin: 0;padding: 0;}
+#messages li {padding: 5px 10px;}
+#messages li .content{background: #cccccc;min-height: 24px;min-width: 4px;line-height: 24px;display: inline-block;padding: 4px 10px;border-radius: 10px;font-size: 14px;}
+#messages li.self .content{float: right;}
+#messages li .user {font-size: 14px;line-height: 18px;color: #999999;}
+#messages li.self .user {text-align: right;}
+#messages {margin-bottom: 40px;margin-top: 60px;}
+
+.head{position: fixed;top: 0px;left: 50%;transform: translate(-50%, 0);width: 600px;background: #ffffff;}
+.head .set{position: absolute;top: 0;right: 0;width: 40px;height: 40px;line-height: 40px;text-align: center;cursor: pointer;}
+.head .set span{display: inline-block;width: 4px;height: 4px;border-radius: 50%;background: #ffffff;}
+
+.pop{position: fixed;top: 0;right: 0;bottom: 0;left: 0;}
+.setBox{position: absolute;top: 50%;left: 50%;transform: translate(-50%, -100%);border: 1px solid #cccccc;
+    width: 300px;height: 100px;box-shadow: 0 0 25px #cccccc;padding: 10px 10px;}
+.saveBtn{padding: 0px 5px;}
+.destroyTime{width: 50px;text-align: center;}
+.setBox label{margin-right: 10px;cursor: pointer;}
+.saveSet{text-align: center;}
+.destroyed{text-align: center;}
+.destroyMsg{background: #cccccc;padding: 1px 3px;color: #aaaaaa;}
+
+.welcome{height: 40px;background: skyblue;color: white;font-size: 20px;line-height: 40px;text-align: center;}
+.usernum{height: 18px;line-height: 18px;text-align: right;margin-right: 15px;;}
+.new-user-box{text-align: center;}
+.new-user{display: inline-block;padding: 2px 5px;background: #cccccc;font-size: 14px;}
+.msgAlertBox{width: 0;height: 0;overflow: hidden;;}
+
+.clear{clear: both;}
+.mt10{margin-top: 10px;}

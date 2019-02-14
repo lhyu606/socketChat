@@ -3,30 +3,7 @@
 
 <head>
     <title>悄悄话</title>
-    <style>
-        * { margin: 0;padding: 0;box-sizing: border-box;}
-
-        body {font: 13px Helvetica, Arial;width: 600px;margin: 0 auto;}
-        form {background: #000;padding: 3px;position: fixed;bottom: 0;width: 600px;}
-        form input {border: 0;padding: 10px;width: 89%;margin-right: .5%;}
-        form button {width: 9%;background: rgb(130, 224, 255);border: none;padding: 10px;}
-
-        #messages {list-style-type: none;margin: 0;padding: 0;}
-        #messages li {padding: 5px 10px;}
-        #messages li .content{background: #cccccc;line-height: 24px;display: inline-block;padding: 6px 10px;border-radius: 10px;font-size: 16px;}
-        #messages li.self .content{float: right;}
-        #messages li .user {font-size: 14px;line-height: 18px;color: #999999;}
-        #messages li.self .user {text-align: right;}
-        #messages {margin-bottom: 40px;margin-top: 60px;}
-
-        .head{position: fixed;top: 0px;left: 50%;transform: translate(-50%, 0);width: 600px;background: #ffffff;}
-        .welcome{height: 40px;background: skyblue;color: white;font-size: 20px;line-height: 40px;text-align: center;}
-        .usernum{height: 18px;line-height: 18px;text-align: right;margin-right: 15px;;}
-        .new-user-box{text-align: center;}
-        .new-user{display: inline-block;padding: 2px 5px;background: #cccccc;font-size: 14px;}
-        .msgAlertBox{width: 0;height: 0;overflow: hidden;;}
-        .clear{clear: both;}
-    </style>
+    <link rel="stylesheet" href="public/css/index.css">
 </head>
 
 <body>
@@ -37,128 +14,52 @@
         <div class="usernum">
             当前用户数：<span id="usernum">1</span>
         </div>
+        <!-- 设置按钮 -->
+        <div class="set">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <!-- 设置框 -->
+    <div class="pop">
+        <div class="setBox">
+            <p>阅后即焚：</p>
+            <div class="mt10">
+                <input type="number" name="destroyTime" step="1" min="1" max="60" value="1" class="destroyTime" id="destroyTime">
+                <label>
+                    <input type="radio" name="destroyType" value="m"> 秒
+                </label>
+                <label>
+                    <input type="radio" name="destroyType" value="f"> 分
+                </label>
+                <label>
+                    <input type="radio" name="destroyType" value="n" checked="checked"> 不需要
+                </label>
+            </div>
+            <div class="saveSet mt10">
+                <button class="saveBtn" id="saveBtn">保存</button>
+            </div>
+        </div>
     </div>
     
+    <!-- 消息列表 -->
     <ul id="messages">
         
     </ul>
+    <!-- 输入框 -->
     <div>
         <form action="">
             <input id="msgInput" autocomplete="off" autofocus="autofocus"/>
             <button>Send</button>
         </form>
     </div>
+    <!-- 消息提示 -->
     <div class="msgAlertBox">
         <audio src="public/video/newMsg.mp3"  preload="auto" id="msgAlert"></audio>
     </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-        $(function () {
-            welcome();
-            var username = $(".username").html();
-            var socket = io();
-            $('form').submit(function () {
-                socket.emit('chat message', {
-                    user: username,
-                    content: $('#msgInput').val()
-                });
-                $('#msgInput').val('');
-                $('#msgInput').focus();
-                return false;
-            });
-            
-            // 有用户消息
-            socket.on('chat message', function (msg) {
-                var html = '';
-                if (msg.user == username){
-                    html = `<li class="item self">
-                        <div class="user">${ msg.user }</div>
-                        <div class="content">${ msg.content }</div>
-                        <div class="clear"></div>
-                    </li>`;
-                } else {
-                    html = `<li class="item">
-                        <div class="user">${ msg.user}</div>
-                        <div class="content">${ msg.content}</div>
-                        <div class="clear"></div>
-                    </li>`;
-                }
-                
-                $('#messages').append($(html));
-                window.scrollTo(0, document.body.scrollHeight);
-                // 提醒消息
-                msgAlert();
-            });
-            // 有新用户登录
-            socket.on('user login', function (msg) {
-                $("#usernum").html(msg.usernum);
-                var html = `<li>
-                    <div class="new-user-box">
-                        <div class="new-user">欢迎 ${msg.username} 加入聊天 ^_^</div>
-                    </div>
-                </li>`;
-                $('#messages').append($(html));
-                window.scrollTo(0, document.body.scrollHeight);
-            });
-            // 用户退出
-            window.onbeforeunload = function (e) {
-                e = e || window.event;
-                socket.emit('logout', {
-                    user: username
-                });
-            }
-            socket.on('user logout', function (msg) {
-                $("#usernum").html(msg.usernum);
-                var html = `<li>
-                    <div class="new-user-box">
-                        <div class="new-user"> ${msg.username} 退出聊天 ^_^</div>
-                    </div>
-                </li>`;
-                $('#messages').append($(html));
-                window.scrollTo(0, document.body.scrollHeight);
-            });
-        });
-        // 问好
-        function welcome() {
-            var date = new Date();
-            var hour = date.getHours();
-            var saygood = '';
-            if (hour >= 18) {
-                saygood = '晚上';
-            } else if (hour >= 12) {
-                saygood = '下午';
-            } else {
-                saygood = '早上'
-            }
-            document.getElementById('saygood').innerText = saygood;
-        }
-        // 消息提醒
-        function msgAlert() {
-            // 播放消息音
-            var audio = document.getElementById('msgAlert');
-            audio.currentTime = 0;
-            audio.play();
-            // 标签闪烁
-            var times = 0;
-            var content = '·';
-            var timer = setInterval(function () {
-                if (times === 10){
-                    clearInterval(timer);
-                    timer = null;
-                    $('title').html('悄悄话');
-                    return;
-                }
-                if (times % 2 === 0) {
-                    $('title').html('您有信息 ^_^');
-                } else {
-                    $('title').html(content);
-                    content += '·';
-                }
-                times++;
-            }, 400);
-        }
-    </script>
+    <script src="public/js/index.js"></script>
 </body>
-
 </html>
