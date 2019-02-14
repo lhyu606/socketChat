@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Socket.IO chat</title>
+    <title>悄悄话</title>
     <style>
         * { margin: 0;padding: 0;box-sizing: border-box;}
 
@@ -24,6 +24,7 @@
         .usernum{height: 18px;line-height: 18px;text-align: right;margin-right: 15px;;}
         .new-user-box{text-align: center;}
         .new-user{display: inline-block;padding: 2px 5px;background: #cccccc;font-size: 14px;}
+        .msgAlertBox{width: 0;height: 0;overflow: hidden;;}
         .clear{clear: both;}
     </style>
 </head>
@@ -43,11 +44,13 @@
     </ul>
     <div>
         <form action="">
-            <input id="m" autocomplete="off" />
+            <input id="msgInput" autocomplete="off" autofocus="autofocus"/>
             <button>Send</button>
         </form>
     </div>
-    
+    <div class="msgAlertBox">
+        <audio src="public/video/newMsg.mp3"  preload="auto" id="msgAlert"></audio>
+    </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
@@ -58,11 +61,14 @@
             $('form').submit(function () {
                 socket.emit('chat message', {
                     user: username,
-                    content: $('#m').val()
+                    content: $('#msgInput').val()
                 });
-                $('#m').val('');
+                $('#msgInput').val('');
+                $('#msgInput').focus();
                 return false;
             });
+            
+            // 有用户消息
             socket.on('chat message', function (msg) {
                 var html = '';
                 if (msg.user == username){
@@ -81,6 +87,8 @@
                 
                 $('#messages').append($(html));
                 window.scrollTo(0, document.body.scrollHeight);
+                // 提醒消息
+                msgAlert();
             });
             // 有新用户登录
             socket.on('user login', function (msg) {
@@ -124,6 +132,31 @@
                 saygood = '早上'
             }
             document.getElementById('saygood').innerText = saygood;
+        }
+        // 消息提醒
+        function msgAlert() {
+            // 播放消息音
+            var audio = document.getElementById('msgAlert');
+            audio.currentTime = 0;
+            audio.play();
+            // 标签闪烁
+            var times = 0;
+            var content = '·';
+            var timer = setInterval(function () {
+                if (times === 10){
+                    clearInterval(timer);
+                    timer = null;
+                    $('title').html('悄悄话');
+                    return;
+                }
+                if (times % 2 === 0) {
+                    $('title').html('您有信息 ^_^');
+                } else {
+                    $('title').html(content);
+                    content += '·';
+                }
+                times++;
+            }, 400);
         }
     </script>
 </body>

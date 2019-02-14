@@ -1,7 +1,12 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
+
+// 设置静态文件托管
+// 当用户访问的 URL 以 /public 开始，那么直接返回对应 __dirname + 'public' 下的文件
+app.use('/public', express.static(__dirname + '/public'));
 // 模板模块
 var swig = require('swig');
 // 加载 body-parser 处理请求数据
